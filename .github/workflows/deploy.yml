@@ -42,8 +42,8 @@ jobs:
             - name: Upload dist folder
               uses: actions/upload-artifact@v4
               with:
-                  name: ${{inputs.asset_folder_name}}
-                  path: wp-content/themes/${{inputs.theme_name}}/${{inputs.asset_folder_name}}
+                  name: ${{ inputs.asset_folder_name }}
+                  path: wp-content/themes/${{ inputs.theme_name }}/${{ inputs.asset_folder_name }}
 
     deploy:
         name: Deploy to WP Engine
@@ -54,11 +54,11 @@ jobs:
             - name: Download artifact
               uses: actions/download-artifact@v4
               with:
-                  name: ${{inputs.asset_folder_name}}
-                  path: wp-content/themes/${{inputs.theme_name}}/${{inputs.asset_folder_name}}
+                  name: ${{ inputs.asset_folder_name }}
+                  path: wp-content/themes/${{ inputs.theme_name }}/${{ inputs.asset_folder_name }}
             - name: GitHub Action Deploy to WP Engine
               if: success()
               uses: wpengine/github-action-wpe-site-deploy@v3
               with:
                   WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
-                  WPE_ENV: ${{inputs.WPE_ENV}}
+                  WPE_ENV: ${{ inputs.WPE_ENV }}
