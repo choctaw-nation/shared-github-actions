@@ -1,9 +1,7 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: PHPCS check
 on:
-    pull_request:
-    # Allow manually triggering the workflow.
-    workflow_dispatch:
+    workflow_call:
 
 # Cancel all previous workflow runs for the same branch that have not yet completed.
 concurrency:
