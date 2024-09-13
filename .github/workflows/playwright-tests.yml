@@ -23,60 +23,60 @@ concurrency:
 
 jobs:
     run-tests:
-      timeout-minutes: ${{inputs.timeout}}
-      runs-on: ubuntu-latest
-      environment: ${{inputs.environment}}
-      steps:
-        - name: Checkout code
-        uses: actions/checkout@v4
-        
-        - uses: actions/setup-node@v4
-        with:
-            node-version: lts/*
+        timeout-minutes: ${{inputs.timeout}}
+        runs-on: ubuntu-latest
+        environment: ${{inputs.environment}}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-        - name: Cache npm dependencies
-          id: npm-cache
-          uses: actions/cache@v4
-          with:
-              path: ~/.npm
-              key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-              restore-keys: |
-                  ${{ runner.os }}-npm-
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
 
-        - name: Cache Playwright browsers
-          id: playwright-cache
-          uses: actions/cache@v4
-          with:
-              path: ~/.cache/ms-playwright
-              key: ${{ runner.os }}-playwright-browsers-${{ hashFiles('**/package-lock.json') }}
-              restore-keys: |
-                  ${{ runner.os }}-playwright-browsers-
+            - name: Cache npm dependencies
+              id: npm-cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-npm-
 
-        - name: Install dependencies
-          run: npm ci
-          if: steps.npm-cache.outputs.cache-hit != 'true'
+            - name: Cache Playwright browsers
+              id: playwright-cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/ms-playwright
+                  key: ${{ runner.os }}-playwright-browsers-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-playwright-browsers-
 
-        - name: Install Playwright Browsers
-          run: npx playwright install --with-deps
-          if: steps.playwright-cache.outputs.cache-hit != 'true'
+            - name: Install dependencies
+              run: npm ci
+              if: steps.npm-cache.outputs.cache-hit != 'true'
 
-        - name: Set environment variables
-          run: |
-              echo "USERNAME=${{ secrets.USERNAME }}" >> $GITHUB_ENV
-              echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
-              echo "API_AUTH=${{ secrets.API_AUTH }}" >> $GITHUB_ENV
+            - name: Install Playwright Browsers
+              run: npx playwright install --with-deps
+              if: steps.playwright-cache.outputs.cache-hit != 'true'
 
-        - name: Run Playwright tests
-          id: playwright-tests
-          run: npm run ${{inputs.script}}
-          continue-on-error: true
+            - name: Set environment variables
+              run: |
+                  echo "USERNAME=${{ secrets.USERNAME }}" >> $GITHUB_ENV
+                  echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
+                  echo "API_AUTH=${{ secrets.API_AUTH }}" >> $GITHUB_ENV
 
-        - name: Upload Playwright report
-          uses: actions/upload-artifact@v4
-          with:
-              name: playwright-report
-              path: playwright-report
+            - name: Run Playwright tests
+              id: playwright-tests
+              run: npm run ${{inputs.script}}
+              continue-on-error: true
 
-        - name: Fail if Playwright tests failed
-          if: steps.playwright-tests.outcome == 'failure'
-          run: exit 1
+            - name: Upload Playwright report
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: playwright-report
+
+            - name: Fail if Playwright tests failed
+              if: steps.playwright-tests.outcome == 'failure'
+              run: exit 1
