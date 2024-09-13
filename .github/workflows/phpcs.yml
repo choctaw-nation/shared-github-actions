@@ -3,11 +3,6 @@ name: PHPCS check
 on:
     workflow_call:
 
-# Cancel all previous workflow runs for the same branch that have not yet completed.
-concurrency:
-    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-    cancel-in-progress: true
-
 jobs:
     phpcs:
         name: PHPCS check
