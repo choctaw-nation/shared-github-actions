@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Deploy to GitHub Releases
+on:
+    workflow_call:
+        inputs:
+            should_build:
+                type: boolean
+                description: 'Whether to run a build step'
+                required: true
+            asset_folder_name:
+                type: string
+                default: 'build'
+                description: 'The name of the folder that gets generated in the build step. Default: build'
+                required: false
+            plugin_name:
+                type: string
+                description: 'The top-level file name of the plugin'
+                required: true
+
+# Cancel all previous workflow runs for the same branch that have not yet completed.
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    bundle:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@main
+
+            - name: Setup Node.js
+              uses: actions/setup-node@main
+
+            - name: Cache npm dependencies
+              id: npm-cache
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node_modules-
+
+            - name: Install dependencies
+              run: npm ci
+              if: steps.npm-cache.outputs.cache-hit != 'true'
+
+            - name: Build Assets build
+              run: npm run build
+              if: ${{ inputs.should_build }}
+
+            - name: Upload Assets
+              uses: actions/upload-artifact@main
+              if: ${{ inputs.should_build }}
+              with:
+                  name: bundle
+                  path: './${{ inputs.asset_folder_name }}'
+
+            - name: Zip Plugin
+              run: npm run plugin-zip
+
+            - name: Upload Plugin
+              uses: actions/upload-artifact@main
+              with:
+                  name: plugin
+                  path: ${{ inputs.plugin_name }}.zip
+
+    deploy:
+        needs: bundle
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@main
+
+            - name: Download Plugin
+              uses: actions/download-artifact@main
+              with:
+                  name: plugin
+                  path: .
+
+            - name: Get version
+              id: version
+              run: |
+                  echo "VERSION=$(grep -Po 'Version: \K.*' ${{ inputs.plugin_name }}.php)" >> "$GITHUB_ENV"
+              shell: bash
+
+            - name: Create Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  files: |
+                      ${{ inputs.plugin_name }}.zip
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  tag_name: v${{ env.VERSION }}
+                  name: v${{ env.VERSION }}
+                  generate_release_notes: true
