@@ -10,6 +10,10 @@
 
 # Changelog
 
+## v1.1.1
+
+-   Update Deploy to Github Release to trim whitespace from the Version variable.
+
 ## v1.1.0
 
 -   Add "Deploy to Github Release" for plugins

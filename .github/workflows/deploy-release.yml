@@ -82,7 +82,7 @@ jobs:
             - name: Get version
               id: version
               run: |
-                  echo "VERSION=$(grep -Po 'Version: \K.*' ${{ inputs.plugin_name }}.php)" >> "$GITHUB_ENV"
+                  echo "VERSION=$(grep -Po 'Version: \K.*' ${{ inputs.plugin_name }}.php | xargs)" >> "$GITHUB_ENV"
               shell: bash
 
             - name: Create Release
