@@ -10,6 +10,11 @@
 
 # Changelog
 
+## v1.1.2 - [Aug 08, 20205]
+
+-   Add a cache-busting mechanism for npm deps.
+-   Force `npm ci` to run on macos-latest for highest compatibility with current dev systems.
+
 ## v1.1.1
 
 -   Update Deploy to Github Release to trim whitespace from the Version variable.

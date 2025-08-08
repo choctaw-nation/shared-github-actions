@@ -26,9 +26,13 @@ concurrency:
 jobs:
     bundle:
         name: Bundle Assets
-        runs-on: ubuntu-latest
+        runs-on: macos-latest
         steps:
             - uses: actions/checkout@v4
+
+            - name: Compute dependency hash
+              id: dep-hash
+              run: echo "hash=$(sha256sum package.json package-lock.json | sha256sum | cut -d' ' -f1)" >> $GITHUB_OUTPUT
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
@@ -38,7 +42,7 @@ jobs:
               uses: actions/cache@v4
               with:
                   path: node_modules
-                  key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+                  key: ${{ runner.os }}-node_modules-${{ steps.dep-hash.outputs.hash }}
                   restore-keys: |
                       ${{ runner.os }}-node_modules-
 
