@@ -10,6 +10,10 @@
 
 # Changelog
 
+## v1.1.2 - [Aug 08, 20205]
+
+-   Add a cache-busting mechanism for npm deps.
+
 ## v1.1.1
 
 -   Update Deploy to Github Release to trim whitespace from the Version variable.
