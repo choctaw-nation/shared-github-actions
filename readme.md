@@ -10,7 +10,11 @@
 
 # Changelog
 
-## v1.1.2 - [Aug 08, 20205]
+## v1.1.3 - [Aug 11, 2025]
+
+-   Fix: Update action versions
+
+## v1.1.2 - [Aug 08, 2025]
 
 -   Add a cache-busting mechanism for npm deps.
 -   Force `npm ci` to run on macos-latest for highest compatibility with current dev systems.
