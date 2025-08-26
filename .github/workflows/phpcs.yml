@@ -11,14 +11,6 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
-            - name: Setup PHP
-              uses: 'shivammathur/setup-php@v2'
-              with:
-                  php-version: 'latest'
-                  ini-values: memory_limit=256M'
-                  coverage: none
-                  tools: cs2pr
-
             - name: Check for composer.json
               id: composer_json_check
               run: |
@@ -28,6 +20,15 @@ jobs:
                   else
                     echo "skip_composer=false" >> $GITHUB_ENV
                   fi
+
+            - name: Setup PHP
+              if: env.skip_composer == 'false'
+              uses: 'shivammathur/setup-php@v2'
+              with:
+                  php-version: 'latest'
+                  ini-values: memory_limit=256M'
+                  coverage: none
+                  tools: cs2pr
 
             - name: Install Composer dependencies
               if: env.skip_composer == 'false'
