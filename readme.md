@@ -10,6 +10,10 @@
 
 # Changelog
 
+## v1.1.3 - [Aug 08, 20205]
+
+-   Add check if composer.json file exists to PHPCS
+
 ## v1.1.2 - [Aug 08, 20205]
 
 -   Add a cache-busting mechanism for npm deps.
