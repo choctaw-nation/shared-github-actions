@@ -11,7 +11,18 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
+            - name: Check for composer.json
+              id: composer_json_check
+              run: |
+                  if [ ! -f composer.json ]; then
+                    echo "composer.json not found. Skipping Composer install."
+                    echo "skip_composer=true" >> $GITHUB_ENV
+                  else
+                    echo "skip_composer=false" >> $GITHUB_ENV
+                  fi
+
             - name: Setup PHP
+              if: env.skip_composer == 'false'
               uses: 'shivammathur/setup-php@v2'
               with:
                   php-version: 'latest'
@@ -20,6 +31,7 @@ jobs:
                   tools: cs2pr
 
             - name: Install Composer dependencies
+              if: env.skip_composer == 'false'
               uses: 'ramsey/composer-install@v3'
               with:
                   # Bust the cache at least once a month - output format: YYYY-MM.
@@ -27,11 +39,13 @@ jobs:
 
             - name: Run PHPCS Beautifier
               id: phpcbf
+              if: env.skip_composer == 'false'
               continue-on-error: true
               run: composer phpcbf
 
             - name: Run PHPCS checks
               id: phpcs
+              if: env.skip_composer == 'false'
               run: composer phpcs
 
             - name: Show PHPCS results in PR
