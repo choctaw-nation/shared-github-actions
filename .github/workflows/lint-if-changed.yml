@@ -48,5 +48,5 @@ jobs:
               run: bun install
 
             - name: Run lint
-              if: steps.check-files.outputs.changed_files == 'true'
+              if: steps.check-files.outputs.changed_files == 'true' && inputs.setup_bun
               run: ${{ inputs.lint_command }}
