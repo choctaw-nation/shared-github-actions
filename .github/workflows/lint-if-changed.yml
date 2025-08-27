@@ -39,7 +39,7 @@ jobs:
 
             - name: Set up Bun
               if: steps.check-files.outputs.changed_files == 'true' && inputs.setup_bun == 'true'
-              uses: oven-sh/setup-bun@v1
+              uses: oven-sh/setup-bun@v2
               with:
                   bun-version: latest
 
