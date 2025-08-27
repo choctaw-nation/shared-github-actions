@@ -10,6 +10,10 @@
 
 # Changelog
 
+## v1.2.0 - [Aug 27, 2025]
+
+-   Added: New "lint-if-changed" shared action to lint style/js files!
+
 ## v1.1.3 - [Aug 08, 2025]
 
 -   Add check if composer.json file exists to PHPCS
