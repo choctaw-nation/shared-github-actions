@@ -28,7 +28,7 @@ jobs:
         name: Bundle Assets
         runs-on: macos-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - name: Compute dependency hash
               id: dep-hash
@@ -64,7 +64,7 @@ jobs:
         runs-on: ubuntu-latest
         needs: [bundle]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
             - name: Download artifact
               uses: actions/download-artifact@v4
               with:
