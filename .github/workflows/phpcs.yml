@@ -9,20 +9,34 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: Check for composer.json
               id: composer_json_check
               run: |
                   if [ ! -f composer.json ]; then
                     echo "composer.json not found. Skipping Composer install."
-                    echo "skip_composer=true" >> $GITHUB_ENV
+                    echo "skip_composer=true" >> $GITHUB_OUTPUT
                   else
-                    echo "skip_composer=false" >> $GITHUB_ENV
+                    echo "skip_composer=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Check for PHP file changes
+              id: check-php-files
+              run: |
+                  git fetch origin ${{ github.base_ref }}
+                  git fetch origin ${{ github.head_ref }}
+                  CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }} origin/${{ github.head_ref }} -- | grep '\.php$' || true)
+                  if [ -z "$CHANGED_FILES" ]; then
+                      echo "No PHP files changed"
+                      echo "changed_files=false" >> "$GITHUB_OUTPUT"
+                  else
+                      echo "PHP files changed"
+                      echo "changed_files=true" >> "$GITHUB_OUTPUT"
                   fi
 
             - name: Setup PHP
-              if: env.skip_composer == 'false'
+              if: steps.composer_json_check.outputs.skip_composer == 'false' && steps.check-php-files.outputs.changed_files == 'true'
               uses: 'shivammathur/setup-php@v2'
               with:
                   php-version: 'latest'
@@ -31,7 +45,7 @@ jobs:
                   tools: cs2pr
 
             - name: Install Composer dependencies
-              if: env.skip_composer == 'false'
+              if: steps.composer_json_check.outputs.skip_composer == 'false' && steps.check-php-files.outputs.changed_files == 'true'
               uses: 'ramsey/composer-install@v3'
               with:
                   # Bust the cache at least once a month - output format: YYYY-MM.
@@ -39,13 +53,13 @@ jobs:
 
             - name: Run PHPCS Beautifier
               id: phpcbf
-              if: env.skip_composer == 'false'
+              if: steps.composer_json_check.outputs.skip_composer == 'false' && steps.check-php-files.outputs.changed_files == 'true'
               continue-on-error: true
               run: composer phpcbf
 
             - name: Run PHPCS checks
               id: phpcs
-              if: env.skip_composer == 'false'
+              if: steps.composer_json_check.outputs.skip_composer == 'false' && steps.check-php-files.outputs.changed_files == 'true'
               run: composer phpcs
 
             - name: Show PHPCS results in PR

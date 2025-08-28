@@ -1,0 +1,52 @@
+name: Lint if Changed
+
+on:
+    workflow_call:
+        inputs:
+            file_extensions:
+                required: true
+                type: string
+            lint_command:
+                required: true
+                type: string
+            setup_bun:
+                required: false
+                type: boolean
+                default: true
+        secrets: {}
+
+jobs:
+    detect-and-lint:
+        runs-on: ubuntu-latest
+        outputs:
+            changed_files: ${{ steps.check-files.outputs.changed_files }}
+        steps:
+            - uses: actions/checkout@v5
+
+            - name: Check for file changes
+              id: check-files
+              run: |
+                  git fetch origin ${{ github.base_ref }}
+                  git fetch origin ${{ github.head_ref }}
+                  CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }} origin/${{ github.head_ref }} -- | grep -E '${{ inputs.file_extensions }}' || true)
+                  if [ -z "$CHANGED_FILES" ]; then
+                    echo "No files changed"
+                    echo "changed_files=false" >> "$GITHUB_OUTPUT"
+                  else
+                    echo "Files changed"
+                    echo "changed_files=true" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Set up Bun
+              if: steps.check-files.outputs.changed_files == 'true' && inputs.setup_bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
+            - name: Install dependencies
+              if: steps.check-files.outputs.changed_files == 'true' && inputs.setup_bun
+              run: bun install
+
+            - name: Run lint
+              if: steps.check-files.outputs.changed_files == 'true' && inputs.setup_bun
+              run: ${{ inputs.lint_command }}

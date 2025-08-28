@@ -10,6 +10,13 @@
 
 # Changelog
 
+## v1.2.0 - [Aug 27, 2025]
+
+-   Added: New "lint-if-changed" shared action to lint style/js files!
+-   Updated: "Checkout" action bumped to v5
+-   Updated: PHPCS code checks only run if `composer.json` file exists and PHP files were changed
+-   Updated: Swapped `composer_json_check` from Github Env to step OUTPUTS for uniformity with `check-php-files`
+
 ## v1.1.3 - [Aug 08, 2025]
 
 -   Add check if composer.json file exists to PHPCS
