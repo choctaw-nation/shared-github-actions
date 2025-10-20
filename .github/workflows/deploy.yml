@@ -81,4 +81,4 @@ jobs:
         with:
           WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
           WPE_ENV: ${{ inputs.WPE_ENV }}
-          FLAGS: ${{ inputs.flags }}
+          FLAGS: ${{ inputs.flags }} --filter=':- .gitignore'
