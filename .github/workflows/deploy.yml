@@ -19,8 +19,8 @@ on:
         required: false
       flags:
         type: string
-        default: "-azvr --delete"
-        description: "Optional flags to pass to the rsync command during deployment. Default: -azvr --delete"
+        default: "-azr --delete"
+        description: "Optional flags to pass to the rsync command during deployment. Default: -azr --delete"
         required: false
 
 # Cancel all previous workflow runs for the same branch that have not yet completed.
@@ -79,6 +79,8 @@ jobs:
         if: success()
         uses: wpengine/github-action-wpe-site-deploy@v3
         with:
+          SRC_PATH: wp-content/themes/${{ inputs.theme_name }}/
+          REMOTE_PATH: wp-content/themes/${{ inputs.theme_name }}/
           WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
           WPE_ENV: ${{ inputs.WPE_ENV }}
-          FLAGS: ${{ inputs.flags }} --filter=':- .gitignore'
+          FLAGS: ${{ inputs.flags }}

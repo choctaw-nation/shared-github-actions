@@ -13,6 +13,7 @@
 ## v1.3.0 - [Oct 20, 2025]
 
 -   Added: New, optional "Flags" argument to pass rsync flags to [`wpe-site-deploy` action](https://github.com/wpengine/github-action-wpe-site-deploy)
+-   Tweak: Focus `wpe deploy` action to the theme folder **only**
 
 ## v1.2.0 - [Aug 27, 2025]
 
