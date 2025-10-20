@@ -10,6 +10,10 @@
 
 # Changelog
 
+## v1.3.0 - [Oct 20, 2025]
+
+-   Added: New, optional "Flags" argument to pass rsync flags to [`wpe-site-deploy` action](https://github.com/wpengine/github-action-wpe-site-deploy)
+
 ## v1.2.0 - [Aug 27, 2025]
 
 -   Added: New "lint-if-changed" shared action to lint style/js files!

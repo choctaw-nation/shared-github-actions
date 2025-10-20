@@ -1,4 +1,5 @@
 {
 	"prettier.enable": true,
-	"yaml.format.enable": true
+	"yaml.format.enable": true,
+	"cSpell.words": ["azvr", "SSHG", "wpengine"]
 }
