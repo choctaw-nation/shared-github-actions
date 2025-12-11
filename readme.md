@@ -10,6 +10,11 @@
 
 # Changelog
 
+## v1.4.0 - [Dec 11, 2025]
+
+-   Added: New optional flag for `phpcs` arg to pass PHP value (default "latest")
+-   Fixed: potential bug in phpcs yml file (removed trailing `'`).
+
 ## v1.3.0 - [Oct 20, 2025]
 
 -   Added: New, optional "Flags" argument to pass rsync flags to [`wpe-site-deploy` action](https://github.com/wpengine/github-action-wpe-site-deploy)
