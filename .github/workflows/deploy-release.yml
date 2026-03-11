@@ -3,6 +3,11 @@ name: Deploy to GitHub Releases
 on:
   workflow_call:
     inputs:
+      with_autoload:
+        type: boolean
+        description: "Whether to use Composer's autoload feature during the build step."
+        required: false
+        default: false
       should_build:
         type: boolean
         description: "Whether to run a build step"
@@ -28,6 +33,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@main
+
+      - name: Setup PHP with Composer
+        uses: shivammathur/setup-php@main
+        if: ${{ inputs.with_autoload }}
+        with:
+          php-version: "8.1"
+          tools: composer
+
+      - name: Install Composer dependencies
+        if: ${{ inputs.with_autoload }}
+        run: composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
 
       - name: Setup Node.js
         uses: actions/setup-node@main

@@ -14,6 +14,7 @@
 
 - Added: Better logic to try to use built assets instead of re-building assets every time
 - Added: PHPUnit tests workflow
+- Added: deploy-release (for plugins) now supports autoloading.
 - Updated: Actions use latest versions (`@main` or `@master`)
 
 ## v1.4.1 - [Feb 11, 2026]
