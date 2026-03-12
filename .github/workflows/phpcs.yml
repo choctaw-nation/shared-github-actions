@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@main
 
       - name: Check for composer.json
         id: composer_json_check
@@ -43,7 +43,7 @@ jobs:
 
       - name: Setup PHP
         if: steps.composer_json_check.outputs.skip_composer == 'false' && steps.check-php-files.outputs.changed_files == 'true'
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup-php@main"
         with:
           php-version: ${{ inputs.php_version }}
           ini-values: memory_limit=256M

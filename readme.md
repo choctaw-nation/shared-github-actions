@@ -10,6 +10,13 @@
 
 # Changelog
 
+## v1.5.0 - [March 11, 2026]
+
+- Added: Better logic to try to use built assets instead of re-building assets every time
+- Added: PHPUnit tests workflow
+- Added: deploy-release (for plugins) now supports autoloading.
+- Updated: Actions use latest versions (`@main` or `@master`)
+
 ## v1.4.1 - [Feb 11, 2026]
 
 - Reset `deploy` to use `ubuntu-latest` for cheaper actions (un-does 1.1.2 change)
