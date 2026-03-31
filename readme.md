@@ -10,6 +10,10 @@
 
 # Changelog
 
+## v1.6.0 - [March 31, 2026]
+
+- Updated: Node uses `lts/*`
+
 ## v1.5.0 - [March 11, 2026]
 
 - Added: Better logic to try to use built assets instead of re-building assets every time
