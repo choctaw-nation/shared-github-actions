@@ -21,6 +21,16 @@ on:
         type: string
         description: "The top-level file name of the plugin"
         required: true
+      php_version:
+        type: string
+        default: "8.2"
+        description: "The version of PHP to use for the build step. Default: 8.2"
+        required: false
+      node_version:
+        type: string
+        default: "lts/*"
+        description: "The version of Node.js to use for the build step. Default: lts/*"
+        required: false
 
 # Cancel all previous workflow runs for the same branch that have not yet completed.
 concurrency:
@@ -38,7 +48,7 @@ jobs:
         uses: shivammathur/setup-php@main
         if: ${{ inputs.with_autoload }}
         with:
-          php-version: "8.1"
+          php-version: ${{ inputs.php_version }}
           tools: composer
 
       - name: Install Composer dependencies
@@ -48,7 +58,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@main
         with:
-          node-version: "lts/*"
+          node-version: ${{ inputs.node_version }}
 
       - name: Check changed files
         id: changes

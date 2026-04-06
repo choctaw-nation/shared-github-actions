@@ -10,6 +10,12 @@
 
 # Changelog
 
+## v1.7.0 - [April 6, 2026]
+
+- Added: `with_autoload` flag now supported on theme deploys to WP Engine
+- Added: `node_version` flag now supported on node actions
+- Added: `php_version` input now supported
+
 ## v1.6.0 - [March 31, 2026]
 
 - Updated: Node uses `lts/*`

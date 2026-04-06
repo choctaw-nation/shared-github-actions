@@ -17,6 +17,21 @@ on:
         default: "cno-starter-theme"
         description: "The name of the theme to deploy. Default: cno-starter-theme"
         required: false
+      with_autoload:
+        type: boolean
+        description: "Whether to use Composer's autoload feature during the build step."
+        required: false
+        default: false
+      node_version:
+        type: string
+        default: "lts/*"
+        description: "The version of Node.js to use for the build step. Default: lts/*"
+        required: false
+      php_version:
+        type: string
+        default: "8.2"
+        description: "The version of PHP to use for the build step. Default: 8.2"
+        required: false
       flags:
         type: string
         default: "-azr --delete"
@@ -71,7 +86,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@main
         with:
-          node-version: "lts/*"
+          node-version: ${{ inputs.node_version }}
 
       - name: Cache npm dependencies
         id: npm-cache
@@ -103,11 +118,24 @@ jobs:
     needs: [bundle]
     steps:
       - uses: actions/checkout@main
+
       - name: Download artifact
         uses: actions/download-artifact@main
         with:
           name: ${{ inputs.asset_folder_name }}
           path: wp-content/themes/${{ inputs.theme_name }}/${{ inputs.asset_folder_name }}
+
+      - name: Setup PHP with Composer
+        uses: shivammathur/setup-php@main
+        if: ${{ inputs.with_autoload }}
+        with:
+          php-version: ${{ inputs.php_version }}
+          tools: composer
+
+      - name: Install Composer dependencies
+        if: ${{ inputs.with_autoload }}
+        run: composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
+
       - name: GitHub Action Deploy to WP Engine
         if: success()
         uses: wpengine/github-action-wpe-site-deploy@main
