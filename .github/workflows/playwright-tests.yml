@@ -16,6 +16,11 @@ on:
         description: "The number of minutes to wait before timing out the job."
         required: false
         default: 10
+      node_version:
+        type: string
+        default: "lts/*"
+        description: "The version of Node.js to use for the tests. Default: lts/*"
+        required: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -32,7 +37,7 @@ jobs:
 
       - uses: actions/setup-node@main
         with:
-          node-version: lts/*
+          node-version: ${{ inputs.node_version }}
 
       - name: Cache npm dependencies
         id: npm-cache
