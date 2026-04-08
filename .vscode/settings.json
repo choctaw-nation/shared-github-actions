@@ -3,6 +3,7 @@
 	"yaml.format.enable": true,
 	"cSpell.words": [
 		"azvr",
+		"inplace",
 		"peaceiris",
 		"phar",
 		"shivammathur",
