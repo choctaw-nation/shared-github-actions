@@ -10,6 +10,10 @@
 
 # Changelog
 
+## v1.7.1 - [April 8, 2026]
+
+- Fixed: Passed additional flags to default "deploy" to WP Engine sites (per [action readme](https://github.com/wpengine/github-action-wpe-site-deploy/tree/main/?tab=readme-ov-file))
+
 ## v1.7.0 - [April 6, 2026]
 
 - Added: `with_autoload` flag now supported on theme deploys to WP Engine
