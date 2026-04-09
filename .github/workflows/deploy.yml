@@ -134,6 +134,7 @@ jobs:
 
       - name: Install Composer dependencies
         if: ${{ inputs.with_autoload }}
+        working-directory: wp-content/themes/${{ inputs.theme_name }}
         run: composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
 
       - name: GitHub Action Deploy to WP Engine
