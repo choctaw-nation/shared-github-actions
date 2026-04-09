@@ -10,6 +10,10 @@
 
 # Changelog
 
+## v1.7.2 - [April 9, 2026]
+
+- Fixed: Updated composer install path to theme dir for proper deployment to WP Engine
+
 ## v1.7.1 - [April 8, 2026]
 
 - Fixed: Passed additional flags to default "deploy" to WP Engine sites (per [action readme](https://github.com/wpengine/github-action-wpe-site-deploy/tree/main/?tab=readme-ov-file))
