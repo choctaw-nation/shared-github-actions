@@ -10,6 +10,11 @@
 
 # Changelog
 
+## v1.8.0 - [April 10, 2026]
+
+- Added: `phpcs` includes a custom path for running composer installs from places _other_ than the root (/public) folder
+- Updated: `phpcs` uses default branches
+
 ## v1.7.2 - [April 9, 2026]
 
 - Fixed: Updated composer install path to theme dir for proper deployment to WP Engine

@@ -8,6 +8,11 @@ on:
         description: "The version of PHP to install"
         required: false
         default: "latest"
+      working_directory:
+        type: string
+        description: "The working directory to run the PHPCS checks in"
+        required: false
+        default: "."
 
 jobs:
   phpcs:
@@ -19,6 +24,7 @@ jobs:
 
       - name: Check for composer.json
         id: composer_json_check
+        working-directory: ${{ inputs.working_directory }}
         run: |
           if [ ! -f composer.json ]; then
             echo "composer.json not found. Skipping Composer install."
@@ -32,7 +38,7 @@ jobs:
         run: |
           git fetch origin ${{ github.base_ref }}
           git fetch origin ${{ github.head_ref }}
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }} origin/${{ github.head_ref }} -- | grep '\.php$' || true)
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }} origin/${{ github.head_ref }} -- "${{ inputs.working_directory }}" | grep '\.php$' || true)
           if [ -z "$CHANGED_FILES" ]; then
               echo "No PHP files changed"
               echo "changed_files=false" >> "$GITHUB_OUTPUT"
@@ -54,6 +60,7 @@ jobs:
         if: steps.composer_json_check.outputs.skip_composer == 'false' && steps.check-php-files.outputs.changed_files == 'true'
         uses: "ramsey/composer-install@v3"
         with:
+          working-directory: ${{ inputs.working_directory }}
           # Bust the cache at least once a month - output format: YYYY-MM.
           custom-cache-suffix: $(date -u "+%Y-%m")
 
@@ -62,12 +69,15 @@ jobs:
         if: steps.composer_json_check.outputs.skip_composer == 'false' && steps.check-php-files.outputs.changed_files == 'true'
         continue-on-error: true
         run: composer phpcbf
+        working-directory: ${{ inputs.working_directory }}
 
       - name: Run PHPCS checks
         id: phpcs
         if: steps.composer_json_check.outputs.skip_composer == 'false' && steps.check-php-files.outputs.changed_files == 'true'
         run: composer phpcs
+        working-directory: ${{ inputs.working_directory }}
 
       - name: Show PHPCS results in PR
         if: ${{ always() && steps.phpcs.outcome == 'failure' }}
+        working-directory: ${{ inputs.working_directory }}
         run: cs2pr ./phpcs-report.xml
